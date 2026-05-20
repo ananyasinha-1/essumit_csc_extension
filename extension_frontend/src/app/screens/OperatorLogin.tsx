@@ -37,15 +37,15 @@ setTimeout(() => {
   };
 
   return (
-    <div className="h-full flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-sm">
-        <div className="bg-surface rounded-lg hover:shadow-md hover:-translate-y-1 transition-all duration-300 p-6 border border-border-custom shadow-sm">
+    <div className="h-full flex items-center justify-center px-4 md:px-8 py-4 md:py-8">
+      <div className="w-full max-w-sm md:max-w-md">
+        <div className="bg-surface rounded-lg p-4 md:p-6 border border-border-custom shadow-sm">
           <div className="mb-6">
             <div className="w-12 h-12 rounded-lg bg-navy/10 flex items-center justify-center mb-3">
               <User className="w-7 h-7 text-navy" strokeWidth={2} />
             </div>
-            <h2 className="text-lg font-semibold text-navy mb-1">ऑपरेटर लॉगिन / Operator Login</h2>
-            <p className="text-sm text-muted-text">CSC सहायक का उपयोग करने के लिए प्रवेश करें</p>
+            <h2 className="text-base md:text-lg font-semibold text-navy mb-1">ऑपरेटर लॉगिन / Operator Login</h2>
+            <p className="text-xs md:text-sm text-muted-text">CSC सहायक का उपयोग करने के लिए प्रवेश करें</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,7 +60,7 @@ setTimeout(() => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter username"
-                  className="w-full h-10 pl-10 pr-3 rounded-md border border-border-custom bg-white text-sm text-navy placeholder:text-muted-text focus:outline-none focus:ring-2 transition-all duration-200 focus:ring-saffron focus:border-transparent"
+                  className="w-full min-h-[44px] md:h-10 pl-10 pr-3 rounded-md border border-border-custom bg-white text-sm text-navy placeholder:text-muted-text focus:outline-none focus:ring-2 focus:ring-saffron focus:border-transparent"
                   autoComplete="username"
                 />
               </div>
