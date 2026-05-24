@@ -45,8 +45,8 @@ const modelVersions = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-3 text-sm">
-        <p className="font-medium text-gray-700 mb-1">{label}</p>
+      <div className="bg-popover text-popover-foreground rounded-lg shadow-lg border border-border p-3 text-sm">
+        <p className="font-medium text-foreground mb-1">{label}</p>
         {payload.map((entry: any, i: number) => (
           <p key={i} style={{ color: entry.color }} className="text-xs">
             {entry.name}: <span className="font-semibold">{entry.value}</span>
@@ -110,7 +110,7 @@ export default function AIModelPerformance() {
                 <kpi.icon size={20} style={{ color: kpi.color }}/>
               </div>
               <div>
-                <div className="text-xl font-bold" style={{ color: '#1e3a5f' }}>{kpi.value}</div>
+                <div className="text-xl font-bold text-foreground">{kpi.value}</div>
                 <div className="text-xs text-gray-500 mt-0.5">{kpi.label}</div>
                 <div className="text-xs text-gray-400">{kpi.sub}</div>
               </div>
@@ -128,14 +128,14 @@ export default function AIModelPerformance() {
           </div>
           <ResponsiveContainer width="100%" height={230}>
             <LineChart data={accuracyData}>
-              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#f1f5f9"/>
-              <XAxis key="x-axis" dataKey="date" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
-              <YAxis key="y-axis" domain={[82, 95]} tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/>
+              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="var(--color-border)"/>
+              <XAxis key="x-axis" dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
+              <YAxis key="y-axis" domain={[82, 95]} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/>
               <Tooltip key="tooltip" content={<CustomTooltip/>}/>
-              <Line key="line-accuracy" type="monotone" dataKey="accuracy" name="Accuracy" stroke="#138808" strokeWidth={2.5} dot={{ r: 3 }} isAnimationActive={false}/>
-              <Line key="line-precision" type="monotone" dataKey="precision" name="Precision" stroke="#1e3a5f" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
-              <Line key="line-recall" type="monotone" dataKey="recall" name="Recall" stroke="#f97316" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
-              <Line key="line-f1" type="monotone" dataKey="f1" name="F1 Score" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
+              <Line key="line-accuracy" type="monotone" dataKey="accuracy" name="Accuracy" stroke="var(--color-chart-1)" strokeWidth={2.5} dot={{ r: 3 }} isAnimationActive={false}/>
+              <Line key="line-precision" type="monotone" dataKey="precision" name="Precision" stroke="var(--color-chart-2)" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
+              <Line key="line-recall" type="monotone" dataKey="recall" name="Recall" stroke="var(--color-chart-4)" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
+              <Line key="line-f1" type="monotone" dataKey="f1" name="F1 Score" stroke="var(--color-chart-5)" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false}/>
             </LineChart>
           </ResponsiveContainer>
           <div className="flex items-center gap-4 mt-2 justify-center flex-wrap">
@@ -154,9 +154,9 @@ export default function AIModelPerformance() {
           </div>
           <ResponsiveContainer width="100%" height={230}>
             <RadarChart data={radarData}>
-              <PolarGrid key="polar-grid" stroke="#f1f5f9"/>
-              <PolarAngleAxis key="angle-axis" dataKey="metric" tick={{ fontSize: 10, fill: '#94a3b8' }}/>
-              <Radar key="radar-model" name="Model" dataKey="value" stroke="#1e3a5f" fill="#1e3a5f" fillOpacity={0.2} strokeWidth={2} isAnimationActive={false}/>
+              <PolarGrid key="polar-grid" stroke="var(--color-border)"/>
+              <PolarAngleAxis key="angle-axis" dataKey="metric" tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }}/>
+              <Radar key="radar-model" name="Model" dataKey="value" stroke="var(--color-chart-2)" fill="var(--color-chart-2)" fillOpacity={0.2} strokeWidth={2} isAnimationActive={false}/>
               <Tooltip key="tooltip" formatter={(val: any) => [`${val}%`, 'Score']}/>
             </RadarChart>
           </ResponsiveContainer>
@@ -171,13 +171,13 @@ export default function AIModelPerformance() {
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={inferenceData} barSize={20}>
-            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#f1f5f9" vertical={false}/>
-            <XAxis key="x-axis" dataKey="hour" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
-            <YAxis key="y-axis-left" yAxisId="left" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}ms`}/>
-            <YAxis key="y-axis-right" yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="var(--color-border)" vertical={false}/>
+            <XAxis key="x-axis" dataKey="hour" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
+            <YAxis key="y-axis-left" yAxisId="left" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}ms`}/>
+            <YAxis key="y-axis-right" yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
             <Tooltip key="tooltip" content={<CustomTooltip/>}/>
-            <Bar key="bar-requests" yAxisId="right" dataKey="requests" name="Requests" fill="#eff6ff" stroke="#93c5fd" strokeWidth={1} radius={[4,4,0,0]} isAnimationActive={false}/>
-            <Bar key="bar-latency" yAxisId="left" dataKey="latency" name="Latency (ms)" fill="#1e3a5f" radius={[4,4,0,0]} isAnimationActive={false}/>
+            <Bar key="bar-requests" yAxisId="right" dataKey="requests" name="Requests" fill="var(--color-chart-2)" stroke="var(--color-chart-2)" strokeWidth={1} radius={[4,4,0,0]} isAnimationActive={false}/>
+            <Bar key="bar-latency" yAxisId="left" dataKey="latency" name="Latency (ms)" fill="var(--color-chart-1)" radius={[4,4,0,0]} isAnimationActive={false}/>
           </BarChart>
         </ResponsiveContainer>
         <div className="flex items-center gap-4 mt-2 justify-center">
@@ -194,20 +194,20 @@ export default function AIModelPerformance() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead style={{ backgroundColor: '#f8fafc' }}>
+            <thead className="bg-muted/50">
               <tr>
                 {['Version', 'Deployed On', 'Accuracy', 'F1 Score', 'Status'].map(h => (
-                  <th key={h} className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
+                  <th key={h} className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {modelVersions.map((v, i) => (
-                <tr key={i} className="border-t border-gray-50 hover:bg-gray-50/50">
-                  <td className="px-5 py-3 font-medium text-gray-800 font-mono text-xs">{v.version}</td>
-                  <td className="px-5 py-3 text-gray-600">{v.deployed}</td>
-                  <td className="px-5 py-3 font-semibold text-gray-800">{v.accuracy}</td>
-                  <td className="px-5 py-3 font-semibold text-gray-800">{v.f1}</td>
+                <tr key={i} className="border-t border-border hover:bg-muted/20">
+                  <td className="px-5 py-3 font-medium text-foreground font-mono text-xs">{v.version}</td>
+                  <td className="px-5 py-3 text-muted-foreground">{v.deployed}</td>
+                  <td className="px-5 py-3 font-semibold text-foreground">{v.accuracy}</td>
+                  <td className="px-5 py-3 font-semibold text-foreground">{v.f1}</td>
                   <td className="px-5 py-3">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                       v.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'

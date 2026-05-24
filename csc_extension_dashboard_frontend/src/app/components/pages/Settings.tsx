@@ -22,8 +22,8 @@ const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
 
 const SectionHeader = ({ icon: Icon, title, subtitle }: { icon: any; title: string; subtitle: string }) => (
   <div className="flex items-center gap-3 mb-5 pb-3 border-b border-gray-100">
-    <div className="p-2 rounded-lg bg-blue-50">
-      <Icon size={18} style={{ color: '#1e3a5f' }}/>
+    <div className="p-2 rounded-lg bg-muted/50 text-foreground">
+      <Icon size={18} />
     </div>
     <div>
       <h3 className="text-gray-800">{title}</h3>
@@ -114,9 +114,9 @@ export default function Settings() {
                 type="range" min={0.5} max={0.99} step={0.01}
                 value={aiSettings.confidenceThreshold}
                 onChange={e => setAiSettings(p => ({ ...p, confidenceThreshold: parseFloat(e.target.value) }))}
-                className="w-24 accent-[#1e3a5f]"
+                className="w-24 accent-primary"
               />
-              <span className="text-sm font-semibold" style={{ color: '#1e3a5f' }}>{(aiSettings.confidenceThreshold * 100).toFixed(0)}%</span>
+              <span className="text-sm font-semibold text-foreground">{(aiSettings.confidenceThreshold * 100).toFixed(0)}%</span>
             </div>
           </SettingRow>
           <SettingRow label="Batch Processing" sub="Process multiple applications simultaneously">
@@ -128,9 +128,9 @@ export default function Settings() {
                 type="range" min={0.5} max={0.9} step={0.01}
                 value={aiSettings.humanReviewBelow}
                 onChange={e => setAiSettings(p => ({ ...p, humanReviewBelow: parseFloat(e.target.value) }))}
-                className="w-24 accent-[#1e3a5f]"
+                className="w-24 accent-primary"
               />
-              <span className="text-sm font-semibold" style={{ color: '#1e3a5f' }}>{(aiSettings.humanReviewBelow * 100).toFixed(0)}%</span>
+              <span className="text-sm font-semibold text-foreground">{(aiSettings.humanReviewBelow * 100).toFixed(0)}%</span>
             </div>
           </SettingRow>
           <SettingRow label="AI Explainability" sub="Show reason codes with predictions">
@@ -140,7 +140,7 @@ export default function Settings() {
             <Toggle enabled={aiSettings.retrainMonthly} onToggle={() => toggle(setAiSettings, 'retrainMonthly')}/>
           </SettingRow>
 
-          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: '#f0f4f8' }}>
+          <div className="mt-4 p-3 rounded-lg bg-muted/50">
             <div className="text-xs font-medium text-gray-600 mb-1">Current Model</div>
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-gray-700">CSC-CoP ilot-v2.3.1</span>
@@ -177,7 +177,7 @@ export default function Settings() {
             <input
               type="text"
               defaultValue="admin@csc.gov.in, tech@nic.in"
-              className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-400"
+              className="w-full text-xs border border-border rounded-lg px-3 py-2 bg-input-background text-foreground focus:outline-none"
             />
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function Settings() {
           <SectionHeader icon={RefreshCw} title="Data Sync Status" subtitle="Integration health and last sync information"/>
           <div className="space-y-3">
             {Object.entries(syncStatus).map(([key, s]) => (
-              <div key={key} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100">
+              <div key={key} className="flex items-center gap-3 p-3 rounded-xl border border-border">
                 <div className="p-2 rounded-lg" style={{ backgroundColor: healthBg[s.health] }}>
                   {s.health === 'good'
                     ? <CheckCircle size={16} style={{ color: healthColor[s.health] }}/>
@@ -208,7 +208,7 @@ export default function Settings() {
                 }`}>
                   {s.status}
                 </span>
-                <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                <button className="p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors">
                   <RefreshCw size={14}/>
                 </button>
               </div>
@@ -226,7 +226,7 @@ export default function Settings() {
               { label: 'Pending Updates', value: '143', badge: 'operators', badgeColor: '#d97706', badgeBg: '#fffbeb' },
               { label: 'Blocked Versions', value: 'v2.x, v1.x', badge: 'deprecated', badgeColor: '#dc2626', badgeBg: '#fef2f2' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
+              <div key={i} className="flex items-center justify-between py-2.5 border-b border-border last:border-0">
                 <span className="text-sm text-gray-600">{item.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-gray-800">{item.value}</span>
@@ -239,7 +239,7 @@ export default function Settings() {
           </div>
           <div className="mt-4 p-3 rounded-lg border border-gray-100">
             <div className="text-xs font-medium text-gray-600 mb-2">Extension Config Endpoint</div>
-            <div className="font-mono text-xs text-gray-600 bg-gray-50 p-2 rounded break-all">
+            <div className="font-mono text-xs text-muted-foreground bg-muted/50 p-2 rounded break-all">
               https://api.csc-copilot.gov.in/ext/config/v3
             </div>
           </div>
@@ -250,21 +250,21 @@ export default function Settings() {
           <SectionHeader icon={Key} title="API Keys & Credentials" subtitle="Manage integration API keys and access tokens"/>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead style={{ backgroundColor: '#f8fafc' }}>
+              <thead className="bg-muted/50">
                 <tr>
                   {['Service', 'API Key', 'Last Used', 'Status', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {apiKeys.map((ak, i) => (
-                  <tr key={i} className="border-t border-gray-50 hover:bg-gray-50/50">
-                    <td className="px-4 py-3 font-medium text-gray-800">{ak.name}</td>
+                  <tr key={i} className="border-t border-border hover:bg-muted/20">
+                    <td className="px-4 py-3 font-medium text-foreground">{ak.name}</td>
                     <td className="px-4 py-3">
-                      <span className="font-mono text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{ak.key}</span>
+                      <span className="font-mono text-xs bg-muted/50 text-muted-foreground px-2 py-1 rounded">{ak.key}</span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-500">{ak.lastUsed}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{ak.lastUsed}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                         ak.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'

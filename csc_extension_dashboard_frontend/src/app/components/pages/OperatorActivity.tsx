@@ -178,7 +178,7 @@ export default function OperatorActivity() {
                 <kpi.icon size={20} style={{ color: kpi.color }}/>
               </div>
               <div>
-                <div className="text-xl font-bold" style={{ color: '#1e3a5f' }}>{kpi.value}</div>
+                <div className="text-xl font-bold text-foreground">{kpi.value}</div>
                 <div className="text-xs text-gray-500">{kpi.label}</div>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function OperatorActivity() {
               placeholder="Search by Ref ID, citizen name, phone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-400"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-input-background text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ export default function OperatorActivity() {
             <select
               value={serviceFilter}
               onChange={(e) => setServiceFilter(e.target.value)}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 bg-white focus:outline-none focus:border-blue-400"
+              className="text-sm border border-border rounded-lg px-3 py-2 text-muted-foreground bg-input-background focus:outline-none"
             >
               {services.map((s) => (
                 <option key={s} value={s}>
@@ -215,7 +215,7 @@ export default function OperatorActivity() {
             <select
               value={riskFilter}
               onChange={(e) => setRiskFilter(e.target.value)}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 bg-white focus:outline-none focus:border-blue-400"
+              className="text-sm border border-border rounded-lg px-3 py-2 text-muted-foreground bg-input-background focus:outline-none"
             >
               {['All', 'High', 'Medium', 'Low'].map((s) => (
                 <option key={s} value={s}>
@@ -237,38 +237,38 @@ export default function OperatorActivity() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead style={{ backgroundColor: '#f8fafc' }}>
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 cursor-pointer" onClick={() => toggleSort('refId')}>
+                  <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer" onClick={() => toggleSort('refId')}>
                     <span className="flex items-center gap-1">Ref ID <SortIcon k="refId" /></span>
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Citizen</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 cursor-pointer" onClick={() => toggleSort('service')}>
+                  <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Citizen</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer" onClick={() => toggleSort('service')}>
                     <span className="flex items-center gap-1">Service <SortIcon k="service" /></span>
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 cursor-pointer" onClick={() => toggleSort('risk')}>
+                  <th className="text-right px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer" onClick={() => toggleSort('risk')}>
                     <span className="flex items-center justify-end gap-1">Risk <SortIcon k="risk" /></span>
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 cursor-pointer" onClick={() => toggleSort('warnings')}>
+                  <th className="text-right px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer" onClick={() => toggleSort('warnings')}>
                     <span className="flex items-center justify-end gap-1">Warnings <SortIcon k="warnings" /></span>
                   </th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 cursor-pointer" onClick={() => toggleSort('timestamp')}>
+                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer" onClick={() => toggleSort('timestamp')}>
                     <span className="flex items-center justify-end gap-1">Submitted <SortIcon k="timestamp" /></span>
                   </th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Operator</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Operator</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((s, i) => (
-                  <tr key={s.sessionId} className={`border-t border-gray-50 hover:bg-blue-50/20 transition-colors ${i % 2 === 1 ? 'bg-gray-50/30' : ''}`}>
+                  <tr key={s.sessionId} className={`border-t border-border hover:bg-muted/20 transition-colors ${i % 2 === 1 ? 'bg-muted/30' : ''}`}>
                     <td className="px-5 py-3">
-                      <div className="font-mono text-gray-800 text-xs">{s.refId}</div>
+                      <div className="font-mono text-foreground text-xs">{s.refId}</div>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="text-gray-700 text-sm">{s.citizenName || '-'}</div>
-                      <div className="text-xs text-gray-400">{s.citizenPhone || ''}</div>
+                      <div className="text-foreground text-sm">{s.citizenName || '-'}</div>
+                      <div className="text-xs text-muted-foreground">{s.citizenPhone || ''}</div>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{getServiceLabel(s.serviceType)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{getServiceLabel(s.serviceType)}</td>
                     <td className="px-4 py-3 text-right">
                       <span
                         className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -289,12 +289,12 @@ export default function OperatorActivity() {
                         {getWarningCount(s)}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-right text-xs text-gray-500 flex items-center justify-end gap-1.5">
+                    <td className="px-5 py-3 text-right text-xs text-muted-foreground flex items-center justify-end gap-1.5">
                       <Clock size={11} />
                       {formatDistanceToNow(new Date(s.timestamp), { addSuffix: true })}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className="text-xs text-gray-500">{s.operatorId || '—'}</span>
+                      <span className="text-xs text-muted-foreground">{s.operatorId || '—'}</span>
                     </td>
                   </tr>
                 ))}

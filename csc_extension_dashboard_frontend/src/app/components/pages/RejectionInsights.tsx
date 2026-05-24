@@ -42,8 +42,8 @@ const recentRejections = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-3 text-sm">
-        <p className="font-medium text-gray-700 mb-1">{label}</p>
+      <div className="bg-popover text-popover-foreground rounded-lg shadow-lg border border-border p-3 text-sm">
+        <p className="font-medium text-foreground mb-1">{label}</p>
         {payload.map((entry: any, i: number) => (
           <p key={i} style={{ color: entry.color }} className="text-xs">
             {entry.name}: <span className="font-semibold">{entry.value.toLocaleString()}</span>
@@ -85,7 +85,7 @@ export default function RejectionInsights() {
                 <kpi.icon size={20} style={{ color: kpi.color }}/>
               </div>
               <div>
-                <div className="text-xl font-bold" style={{ color: '#1e3a5f' }}>{kpi.value}</div>
+                <div className="text-xl font-bold text-foreground">{kpi.value}</div>
                 <div className="text-xs text-gray-500">{kpi.label}</div>
               </div>
             </div>
@@ -132,12 +132,12 @@ export default function RejectionInsights() {
           <h3 className="text-gray-800 mb-4">Actual vs Predicted Rejections</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={monthlyRejections} barSize={18}>
-              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#f1f5f9" vertical={false}/>
-              <XAxis key="x-axis" dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
-              <YAxis key="y-axis" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} tickFormatter={v => `${(v/1000).toFixed(1)}k`}/>
+              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="var(--color-border)" vertical={false}/>
+              <XAxis key="x-axis" dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
+              <YAxis key="y-axis" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false} tickFormatter={v => `${(v/1000).toFixed(1)}k`}/>
               <Tooltip key="tooltip" content={<CustomTooltip/>}/>
-              <Bar key="bar-rejections" dataKey="rejections" name="Actual" fill="#ef4444" radius={[4,4,0,0]} isAnimationActive={false}/>
-              <Bar key="bar-predicted" dataKey="predicted" name="Predicted" fill="#f97316" radius={[4,4,0,0]} opacity={0.6} isAnimationActive={false}/>
+              <Bar key="bar-rejections" dataKey="rejections" name="Actual" fill="var(--color-destructive)" radius={[4,4,0,0]} isAnimationActive={false}/>
+              <Bar key="bar-predicted" dataKey="predicted" name="Predicted" fill="var(--color-chart-4)" radius={[4,4,0,0]} opacity={0.6} isAnimationActive={false}/>
             </BarChart>
           </ResponsiveContainer>
           <div className="flex items-center gap-4 mt-2 justify-center">
@@ -152,7 +152,7 @@ export default function RejectionInsights() {
         <h3 className="text-gray-800 mb-4">Rejection Rate by Service Category</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
           {rejectionByService.map((item, i) => (
-            <div key={i} className="rounded-xl border border-gray-100 p-4 hover:shadow-sm transition-shadow">
+            <div key={i} className="rounded-xl border border-border p-4 hover:shadow-sm transition-shadow">
               <div className="flex items-start justify-between mb-2">
                 <span className="text-sm font-medium text-gray-800">{item.service}</span>
                 <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">{item.rate}</span>
@@ -172,13 +172,13 @@ export default function RejectionInsights() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="flex items-center justify-between p-5 border-b border-gray-100">
           <h3 className="text-gray-800">Recent Predicted Rejections</h3>
-          <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => toast.info('Loading all rejection records...')}>
+          <button className="text-xs text-primary hover:opacity-80 font-medium flex items-center gap-1" onClick={() => toast.info('Loading all rejection records...')}>
             View all <ChevronRight size={14}/>
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead style={{ backgroundColor: '#f8fafc' }}>
+            <thead className="bg-muted/50">
               <tr>
                 {['Application ID', 'Service', 'District', 'Rejection Reason', 'Date', 'AI Confidence'].map(h => (
                   <th key={h} className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">{h}</th>
@@ -187,7 +187,7 @@ export default function RejectionInsights() {
             </thead>
             <tbody>
               {recentRejections.map((row, i) => (
-                <tr key={i} className={`border-t border-gray-50 hover:bg-red-50/20 transition-colors`}>
+                <tr key={i} className={`border-t border-border hover:bg-muted/20 transition-colors`}>
                   <td className="px-5 py-3 font-mono text-xs text-blue-600 font-medium">{row.appId}</td>
                   <td className="px-5 py-3 text-gray-700">{row.service}</td>
                   <td className="px-5 py-3 text-gray-600">{row.district}</td>

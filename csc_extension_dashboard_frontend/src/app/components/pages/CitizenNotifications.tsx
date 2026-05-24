@@ -41,7 +41,7 @@ export default function CitizenNotifications() {
           <h1 className="text-gray-800">Citizen Notifications</h1>
           <p className="text-sm text-gray-500 mt-0.5">Application status alerts and system messages</p>
         </div>
-        <button className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-white shadow-sm hover:opacity-90 w-fit" style={{ backgroundColor: '#1e3a5f' }}>
+        <button className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-primary text-primary-foreground shadow-sm hover:opacity-90 w-fit">
           <Send size={15}/> Send Bulk Notification
         </button>
       </div>
@@ -54,15 +54,15 @@ export default function CitizenNotifications() {
           { label: 'Rejected Today', value: 2, color: '#f97316', bg: '#fff7ed' },
           { label: 'Warnings Sent', value: 1243, color: '#d97706', bg: '#fffbeb' },
         ].map((s, i) => (
-          <div key={i} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div key={i} className="bg-card rounded-xl p-4 shadow-sm border border-border">
             <div className="text-xl font-bold mb-0.5" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-xs text-gray-500">{s.label}</div>
+            <div className="text-xs text-muted-foreground">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-card rounded-xl p-4 shadow-sm border border-border">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
@@ -71,7 +71,7 @@ export default function CitizenNotifications() {
               placeholder="Search notifications..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-400"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-input-background text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
           <div className="flex gap-2">
@@ -81,10 +81,9 @@ export default function CitizenNotifications() {
                 onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
                   filter === f
-                    ? 'text-white border-transparent'
+                    ? 'bg-primary text-primary-foreground border-transparent'
                     : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                 }`}
-                style={filter === f ? { backgroundColor: '#1e3a5f' } : {}}
               >
                 {f}
               </button>
@@ -93,7 +92,7 @@ export default function CitizenNotifications() {
           <select
             value={readFilter}
             onChange={e => setReadFilter(e.target.value)}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 bg-white focus:outline-none"
+            className="text-sm border border-border rounded-lg px-3 py-2 text-muted-foreground bg-input-background focus:outline-none"
           >
             <option>All</option>
             <option>Unread</option>
@@ -109,10 +108,8 @@ export default function CitizenNotifications() {
           return (
             <div
               key={notif.id}
-              className={`bg-white rounded-xl p-4 shadow-sm border transition-shadow hover:shadow-md flex gap-4 ${
-                !notif.read ? 'border-l-4' : 'border border-gray-100'
-              }`}
-              style={!notif.read ? { borderLeftColor: color, borderTop: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' } : {}}
+              className={`rounded-xl p-4 shadow-sm border border-border transition-shadow hover:shadow-md flex gap-4 ${!notif.read ? 'border-l-4' : ''}`}
+              style={!notif.read ? { borderLeftColor: color } : undefined}
             >
               <div className="p-2.5 rounded-lg h-fit flex-shrink-0" style={{ backgroundColor: bg }}>
                 <Icon size={18} style={{ color }}/>
@@ -122,7 +119,7 @@ export default function CitizenNotifications() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-800 text-sm">{notif.title}</span>
                     {!notif.read && (
-                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: '#2563eb' }}/>
+                      <span className="w-2 h-2 rounded-full flex-shrink-0 bg-primary" />
                     )}
                   </div>
                   <span className="text-xs text-gray-400 flex-shrink-0">{notif.time}</span>

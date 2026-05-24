@@ -48,8 +48,8 @@ const stateData = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-3 text-sm">
-        <p className="font-medium text-gray-700 mb-1">{label}</p>
+      <div className="bg-popover text-popover-foreground rounded-lg shadow-lg border border-border p-3 text-sm">
+        <p className="font-medium text-foreground mb-1">{label}</p>
         {payload.map((entry: any, i: number) => (
           <p key={i} style={{ color: entry.color }} className="text-xs">
             {entry.name}: <span className="font-semibold">{typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}</span>
@@ -79,9 +79,8 @@ export default function ApplicationAnalytics() {
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`px-3 py-1.5 text-xs font-medium transition-colors capitalize ${
-                  period === p ? 'text-white' : 'text-gray-600 hover:bg-gray-50'
+                  period === p ? 'bg-primary text-primary-foreground' : 'text-gray-600 hover:bg-gray-50'
                 }`}
-                style={period === p ? { backgroundColor: '#1e3a5f' } : {}}
               >
                 {p}
               </button>
@@ -115,7 +114,7 @@ export default function ApplicationAnalytics() {
                 <kpi.icon size={20} style={{ color: kpi.color }}/>
               </div>
               <div>
-                <div className="text-xl font-bold" style={{ color: '#1e3a5f' }}>{kpi.value}</div>
+                <div className="text-xl font-bold text-foreground">{kpi.value}</div>
                 <div className="text-xs text-gray-500">{kpi.label}</div>
               </div>
             </div>
@@ -131,13 +130,13 @@ export default function ApplicationAnalytics() {
         </div>
         <ResponsiveContainer width="100%" height={260}>
           <AreaChart data={monthlyData}>
-            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#f1f5f9"/>
-            <XAxis key="x-axis" dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
-            <YAxis key="y-axis" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`}/>
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="var(--color-border)"/>
+            <XAxis key="x-axis" dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
+            <YAxis key="y-axis" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`}/>
             <Tooltip key="tooltip" content={<CustomTooltip/>}/>
-            <Area key="area-approved" type="monotone" dataKey="approved" name="Approved" stroke="#138808" strokeWidth={2} fill="#138808" fillOpacity={0.12} isAnimationActive={false}/>
-            <Area key="area-rejected" type="monotone" dataKey="rejected" name="Rejected" stroke="#ef4444" strokeWidth={2} fill="#ef4444" fillOpacity={0.10} isAnimationActive={false}/>
-            <Area key="area-pending" type="monotone" dataKey="pending" name="Pending" stroke="#FF9933" strokeWidth={1.5} fill="none" strokeDasharray="4 2" isAnimationActive={false}/>
+            <Area key="area-approved" type="monotone" dataKey="approved" name="Approved" stroke="var(--color-chart-1)" strokeWidth={2} fill="var(--color-chart-1)" fillOpacity={0.12} isAnimationActive={false}/>
+            <Area key="area-rejected" type="monotone" dataKey="rejected" name="Rejected" stroke="var(--color-destructive)" strokeWidth={2} fill="var(--color-destructive)" fillOpacity={0.10} isAnimationActive={false}/>
+            <Area key="area-pending" type="monotone" dataKey="pending" name="Pending" stroke="var(--color-chart-4)" strokeWidth={1.5} fill="none" strokeDasharray="4 2" isAnimationActive={false}/>
           </AreaChart>
         </ResponsiveContainer>
         <div className="flex items-center gap-4 mt-2 justify-center">
@@ -156,11 +155,11 @@ export default function ApplicationAnalytics() {
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={weeklyRate}>
-              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#f1f5f9"/>
-              <XAxis key="x-axis" dataKey="week" tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false}/>
-              <YAxis key="y-axis" domain={[70, 85]} tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/>
+              <CartesianGrid key="grid" strokeDasharray="3 3" stroke="var(--color-border)"/>
+              <XAxis key="x-axis" dataKey="week" tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false}/>
+              <YAxis key="y-axis" domain={[70, 85]} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/>
               <Tooltip key="tooltip" formatter={(val: any) => [`${val}%`, 'Acceptance Rate']}/>
-              <Line key="line-rate" type="monotone" dataKey="rate" name="Rate" stroke="#1e3a5f" strokeWidth={2.5} dot={{ r: 3, fill: '#1e3a5f' }} isAnimationActive={false}/>
+              <Line key="line-rate" type="monotone" dataKey="rate" name="Rate" stroke="var(--color-primary)" strokeWidth={2.5} dot={{ r: 3, fill: 'var(--color-primary)' }} isAnimationActive={false}/>
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -183,7 +182,7 @@ export default function ApplicationAnalytics() {
                   <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
-                      style={{ width: s.rate, backgroundColor: '#1e3a5f' }}
+                      style={{ width: s.rate, backgroundColor: 'var(--color-primary)' }}
                     />
                   </div>
                 </div>

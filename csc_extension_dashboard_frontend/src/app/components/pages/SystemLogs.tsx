@@ -57,7 +57,7 @@ export default function SystemLogs() {
           <button className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 shadow-sm">
             <Download size={15}/> Export
           </button>
-          <button className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-white shadow-sm hover:opacity-90" style={{ backgroundColor: '#1e3a5f' }}>
+          <button className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-primary text-primary-foreground shadow-sm hover:opacity-90">
             <RefreshCw size={15}/> Refresh
           </button>
         </div>
@@ -73,23 +73,23 @@ export default function SystemLogs() {
               onClick={() => setLevelFilter(levelFilter === level ? 'All' : level)}
               className={`p-4 shadow-sm border text-left transition-all hover:shadow-md ${ levelFilter === level ? 'ring-2' : '' } rounded-[11px]`}
               style={levelFilter === level
-                ? { backgroundColor: cfg.bg, borderColor: cfg.color, ringColor: cfg.color }
-                : { backgroundColor: '#fff', borderColor: '#f1f5f9' }
-              }
+                  ? { backgroundColor: cfg.bg, borderColor: cfg.color, ringColor: cfg.color }
+                  : { backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }
+                }
             >
               <div className="flex items-center gap-2 mb-1">
                 <cfg.icon size={16} style={{ color: cfg.color }}/>
                 <span className="text-xs font-semibold" style={{ color: cfg.color }}>{level}</span>
               </div>
-              <div className="text-xl font-bold" style={{ color: '#1e3a5f' }}>{count}</div>
-              <div className="text-xs text-gray-400">events today</div>
+              <div className="text-xl font-bold text-foreground">{count}</div>
+              <div className="text-xs text-muted-foreground">events today</div>
             </button>
           );
         })}
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-card rounded-xl p-4 shadow-sm border border-border">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
@@ -98,7 +98,7 @@ export default function SystemLogs() {
               placeholder="Search logs..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-400"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-input-background text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -106,7 +106,7 @@ export default function SystemLogs() {
             <select
               value={serviceFilter}
               onChange={e => setServiceFilter(e.target.value)}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 bg-white focus:outline-none"
+              className="text-sm border border-border rounded-lg px-3 py-2 text-muted-foreground bg-input-background focus:outline-none"
             >
               {services.map(s => <option key={s}>{s}</option>)}
             </select>
@@ -117,7 +117,7 @@ export default function SystemLogs() {
 
       {/* Logs */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100" style={{ backgroundColor: '#0f172a' }}>
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-card">
           <Terminal size={14} className="text-green-400"/>
           <span className="text-xs text-green-400 font-mono">csc-ai-platform — system logs — live</span>
           <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
@@ -125,11 +125,11 @@ export default function SystemLogs() {
             LIVE
           </span>
         </div>
-        <div className="divide-y divide-gray-50">
+        <div className="divide-y divide-border">
           {filtered.map((log) => {
             const cfg = levelConfig[log.level];
             return (
-              <div key={log.id} className="flex gap-3 px-4 py-3 hover:bg-gray-50/50 transition-colors">
+              <div key={log.id} className="flex gap-3 px-4 py-3 hover:bg-muted/20 transition-colors">
                 <div className="p-1.5 rounded h-fit flex-shrink-0" style={{ backgroundColor: cfg.bg }}>
                   <cfg.icon size={13} style={{ color: cfg.color }}/>
                 </div>
