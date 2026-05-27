@@ -1,5 +1,6 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
+import { useTheme } from "next-themes";
 
 /* ── MUI core ─────────────────────────────────────────────────── */
 import { styled, alpha } from "@mui/material/styles";
@@ -244,6 +245,8 @@ const tabsSx = {
    LAYOUT COMPONENT
 ════════════════════════════════════════════════════════════════ */
 export default function Layout() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const navigate = useNavigate();
   const location = useLocation();
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -301,7 +304,7 @@ export default function Layout() {
       }}
     >
       {/* Mini profile card */}
-      <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #f0f0f0", mb: 0.5 }}>
+      <Box sx={{ px: 2, py: 1.5, borderBottom: isDark ? "1px solid #334155" : "1px solid #f0f0f0", mb: 0.5 }}>
         <Typography sx={{ fontSize: "13px", fontWeight: 700, color: GOV.navy }}>
           Admin User
         </Typography>
@@ -399,7 +402,7 @@ export default function Layout() {
         height: "100vh",
         overflow: "hidden",
         fontFamily: "Inter, Noto Sans Devanagari, sans-serif",
-        bgcolor: GOV.contentBg,
+        bgcolor: isDark ? "#0f172a" : GOV.contentBg,
       }}
     >
       {/* ══ ROW 1 — Utility Bar ══════════════════════════════════ */}
@@ -410,7 +413,7 @@ export default function Layout() {
           left: 0,
           right: 0,
           zIndex: 1300,
-          bgcolor: GOV.navy,
+          bgcolor: isDark ? "#0b1f4d" : GOV.navy,
           height: "34px",
           display: "flex",
           alignItems: "center",
@@ -546,8 +549,8 @@ export default function Layout() {
         sx={{
           top: "34px",
           zIndex: 1200,
-          bgcolor: GOV.white,
-          color: GOV.navy,
+          bgcolor: isDark ? "#1e293b" : GOV.white,
+          color: isDark ? "#e2e8f0" : GOV.navy,
           borderBottom: `4px solid ${GOV.saffron}`,
           boxShadow: "0 2px 10px rgba(0,0,0,0.10)",
         }}
@@ -581,7 +584,7 @@ export default function Layout() {
               sx={{
                 fontSize: "15px",
                 fontWeight: 700,
-                color: GOV.navy,
+                color: isDark ? "#e2e8f0" : GOV.navy,
                 lineHeight: 1.3,
               }}
             >
@@ -656,7 +659,7 @@ export default function Layout() {
                 sx={{
                   width: 32,
                   height: 32,
-                  bgcolor: GOV.blue,
+                  bgcolor: isDark ? "#0b1f4d" : GOV.blue,
                   border: `2px solid ${GOV.saffron}`,
                   fontSize: "12px",
                   fontWeight: 700,
@@ -671,7 +674,7 @@ export default function Layout() {
                   sx={{
                     fontSize: "12px",
                     fontWeight: 700,
-                    color: GOV.navy,
+                    color: isDark ? "#e2e8f0" : GOV.navy,
                     lineHeight: 1.2,
                   }}
                 >
@@ -715,7 +718,7 @@ export default function Layout() {
           left: 0,
           right: 0,
           zIndex: 1100,
-          bgcolor: GOV.blue,
+          bgcolor: isDark ? "#0b1f4d" : GOV.blue,
           boxShadow: "0 3px 8px rgba(0,0,0,0.22)",
           display: "flex",
           alignItems: "center",
@@ -811,7 +814,7 @@ export default function Layout() {
           alignItems: "center",
           justifyContent: "space-between",
           gap: 1,
-          bgcolor: GOV.navy,
+          bgcolor: isDark ? "#0b1f4d" : GOV.navy,
         }}
       >
         <Box
