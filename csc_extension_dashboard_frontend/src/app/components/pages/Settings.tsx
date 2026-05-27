@@ -43,23 +43,29 @@ const SettingRow = ({ label, sub, children }: { label: string; sub?: string; chi
 );
 
 export default function Settings() {
-  const [aiSettings, setAiSettings] = useState({
+  const [aiSettings, setAiSettings] = useState(() => {
+  const saved = localStorage.getItem('csc_ai_settings');
+  return saved ? JSON.parse(saved) : {
     autoFlagRejections: true,
     confidenceThreshold: 0.82,
     batchProcessing: true,
     humanReviewBelow: 0.75,
     enableExplainability: true,
     retrainMonthly: false,
-  });
+  };
+});
 
-  const [notifSettings, setNotifSettings] = useState({
+const [notifSettings, setNotifSettings] = useState(() => {
+  const saved = localStorage.getItem('csc_notif_settings');
+  return saved ? JSON.parse(saved) : {
     smsOnApproval: true,
     smsOnRejection: true,
     emailOperatorWarnings: true,
     pushNotifications: false,
     dailyDigest: true,
     criticalAlerts: true,
-  });
+  };
+});
 
   const [syncStatus] = useState({
     nicPortal: { status: 'connected', lastSync: '2 min ago', health: 'good' },
@@ -77,7 +83,13 @@ export default function Settings() {
   ]);
 
   const [saved, setSaved] = useState(false);
-  const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); toast.success('Settings saved successfully!'); };
+  const handleSave = () => {
+  localStorage.setItem('csc_ai_settings', JSON.stringify(aiSettings));
+  localStorage.setItem('csc_notif_settings', JSON.stringify(notifSettings));
+  setSaved(true);
+  setTimeout(() => setSaved(false), 2000);
+  toast.success('Settings saved successfully!');
+  };
 
   const toggle = (setter: any, key: string) => setter((prev: any) => ({ ...prev, [key]: !prev[key] }));
 
