@@ -304,12 +304,22 @@
 
         // Send raw fields to content script - content.js handles the deep fuzzy mapping
         if (typeof chrome !== "undefined" && chrome.tabs) {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
             if (tabs[0]) {
-              chrome.tabs.sendMessage(tabs[0].id, {
-                action: "FILL_FORM_DESKTOP",
-                data: fieldsJson
-              });
+              if (typeof CSCUtils !== "undefined" && CSCUtils.sendRobustTabMessage) {
+                const res = await CSCUtils.sendRobustTabMessage(tabs[0].id, {
+                  action: "FILL_FORM_DESKTOP",
+                  data: fieldsJson
+                });
+                if (!res.success) {
+                  console.warn("[Panel] FILL_FORM_DESKTOP failed", res.details);
+                }
+              } else {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                  action: "FILL_FORM_DESKTOP",
+                  data: fieldsJson
+                });
+              }
             }
           });
         }
@@ -918,7 +928,7 @@
    */
   function scanActiveTabFormFields(statusEl) {
     return new Promise((resolve, reject) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         if (!tabs || tabs.length === 0) {
           reject(new Error("No active tab"));
           return;
@@ -928,35 +938,58 @@
 
         if (statusEl) statusEl.textContent = "फॉर्म स्कैन हो रहा है... / Scanning open form...";
 
-        chrome.tabs.sendMessage(tabId, { type: "SCAN_FORM_FIELDS" }, (response) => {
-          if (chrome.runtime.lastError) {
-            // Content script not loaded — inject it first
-            if (chrome.scripting) {
-              chrome.scripting.executeScript(
-                { target: { tabId: tabId }, files: ["content.js"] },
-                () => {
-                  if (chrome.runtime.lastError) {
-                    reject(new Error(chrome.runtime.lastError.message));
-                    return;
-                  }
-                  setTimeout(() => {
-                    chrome.tabs.sendMessage(tabId, { type: "SCAN_FORM_FIELDS" }, (res2) => {
-                      if (chrome.runtime.lastError) {
-                        reject(new Error(chrome.runtime.lastError.message));
-                      } else {
-                        resolve(res2 || []);
-                      }
-                    });
-                  }, 500);
-                }
-              );
+        if (typeof CSCUtils !== "undefined" && CSCUtils.sendRobustTabMessage) {
+          try {
+            const result = await CSCUtils.sendRobustTabMessage(tabId, { type: "SCAN_FORM_FIELDS" });
+            if (result.success) {
+              // Unpack fields if present in structured response format, else check response directly
+              const resp = result.response;
+              const fields = resp && resp.fields ? resp.fields : (Array.isArray(resp) ? resp : []);
+              resolve(fields);
             } else {
-              reject(new Error("Cannot inject content script"));
+              let errorMsg = result.details || "Unknown error occurred";
+              if (result.error === "RESTRICTED_PAGE") {
+                errorMsg = "सुरक्षा प्रतिबंधों के कारण इस सरकारी पोर्टल पर स्क्रिप्ट एक्सेस ब्लॉक है। / Script access is blocked on this page due to security restrictions.";
+              } else if (result.error === "TIMEOUT") {
+                errorMsg = "फॉर्म स्कैन टाइमआउट हो गया। कृपया पेज लोड होने दें। / Form scanning timed out. Please let the page load completely.";
+              }
+              reject(new Error(errorMsg));
             }
-          } else {
-            resolve(response || []);
+          } catch (e) {
+            reject(e);
           }
-        });
+        } else {
+          // Fallback to legacy behavior if CSCUtils is not loaded
+          chrome.tabs.sendMessage(tabId, { type: "SCAN_FORM_FIELDS" }, (response) => {
+            if (chrome.runtime.lastError) {
+              // Content script not loaded — inject it first
+              if (chrome.scripting) {
+                chrome.scripting.executeScript(
+                  { target: { tabId: tabId }, files: ["content.js"] },
+                  () => {
+                    if (chrome.runtime.lastError) {
+                      reject(new Error(chrome.runtime.lastError.message));
+                      return;
+                    }
+                    setTimeout(() => {
+                      chrome.tabs.sendMessage(tabId, { type: "SCAN_FORM_FIELDS" }, (res2) => {
+                        if (chrome.runtime.lastError) {
+                          reject(new Error(chrome.runtime.lastError.message));
+                        } else {
+                          resolve(res2 || []);
+                        }
+                      });
+                    }, 500);
+                  }
+                );
+              } else {
+                reject(new Error("Cannot inject content script"));
+              }
+            } else {
+              resolve(response || []);
+            }
+          });
+        }
       });
     });
   }
@@ -1483,27 +1516,52 @@
         /* scan or resolve failed — proceed with original values */
       }
 
-      // If content script isn't running yet on this tab, inject it first then fill
-      chrome.tabs.sendMessage(
-        activeTab.id,
-        {
-          type: "AUTO_FILL_FORM",
-          fields: finalFields,
-          selectors: selectors,
-          confidenceMap: confidenceMap
-        },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            injectAndFill(activeTab.id, finalFields, selectors, confidenceMap, config);
+      // Use the safe, robust messaging layer with timeout and injection handling
+      if (typeof CSCUtils !== "undefined" && CSCUtils.sendRobustTabMessage) {
+        try {
+          const result = await CSCUtils.sendRobustTabMessage(activeTab.id, {
+            type: "AUTO_FILL_FORM",
+            fields: finalFields,
+            selectors: selectors,
+            confidenceMap: confidenceMap
+          });
+          if (result.success) {
+            handleAutoFillResponse(result.response || {}, config);
           } else {
-            handleAutoFillResponse(response || {}, config);
+            let errorMsg = result.details || "Unknown error occurred";
+            if (result.error === "RESTRICTED_PAGE") {
+              errorMsg = "सुरक्षा प्रतिबंधों के कारण इस सरकारी पोर्टल पर ऑटो-फ़िल ब्लॉक है। / Auto-fill is blocked on this government portal due to security restrictions.";
+            } else if (result.error === "TIMEOUT") {
+              errorMsg = "ऑटो-फ़िल रिस्पांस टाइमआउट हो गया। कृपया दोबारा प्रयास करें। / Auto-fill response timed out. Please try again.";
+            }
+            handleAutoFillResponse({ error: errorMsg }, config);
           }
+        } catch (err) {
+          handleAutoFillResponse({ error: err.message || "An exception occurred during form filling." }, config);
         }
-      );
+      } else {
+        // Fallback to legacy behavior if CSCUtils is not available
+        chrome.tabs.sendMessage(
+          activeTab.id,
+          {
+            type: "AUTO_FILL_FORM",
+            fields: finalFields,
+            selectors: selectors,
+            confidenceMap: confidenceMap
+          },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              injectAndFillLegacy(activeTab.id, finalFields, selectors, confidenceMap, config);
+            } else {
+              handleAutoFillResponse(response || {}, config);
+            }
+          }
+        );
+      }
     });
   }
 
-  function injectAndFill(tabId, finalFields, selectors, confidenceMap, config) {
+  function injectAndFillLegacy(tabId, finalFields, selectors, confidenceMap, config) {
     // Inject content script programmatically, then retry
     if (chrome.scripting) {
       chrome.scripting.executeScript(

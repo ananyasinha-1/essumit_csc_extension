@@ -171,6 +171,7 @@
     chrome.runtime.sendMessage({
       type: "FORM_DETECTED",
       adapter: activeAdapter.constructor.name,
+      domain: window.location.hostname,
       url: currentUrl,
       title: document.title
     });
@@ -284,7 +285,7 @@
       });
     }
 
-    return true;
+    return false;
   });
 
   // ─── HELPER FUNCTIONS (same as before) ─────────────────────

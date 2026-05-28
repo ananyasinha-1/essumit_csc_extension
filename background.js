@@ -10,13 +10,11 @@ chrome.sidePanel
 // Track which tab has a recognized government form
 const formDetectedTabs = new Set();
 
-// Listen for messages from content scripts
+// Listen for messages from content scripts and side panel
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (!sender.tab) return;
-
-  const tabId = sender.tab.id;
-
   if (message.type === "FORM_DETECTED") {
+    if (!sender.tab) return;
+    const tabId = sender.tab.id;
     formDetectedTabs.add(tabId);
     // Store detection info so side panel can query it
     chrome.storage.session.set({
@@ -29,6 +27,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     sendResponse({ status: "ok" });
   } else if (message.type === "NO_FORM") {
+    if (!sender.tab) return;
+    const tabId = sender.tab.id;
     formDetectedTabs.delete(tabId);
     chrome.storage.session.set({
       [`formDetected_${tabId}`]: { detected: false }
@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
         chrome.storage.session.get(`formDetected_${tabs[0].id}`, (result) => {
-          sendResponse(result[`formDetected_${tabs[0].id}`] || { detected: false });
+          sendResponse((result && result[`formDetected_${tabs[0].id}`]) || { detected: false });
         });
       } else {
         sendResponse({ detected: false });
