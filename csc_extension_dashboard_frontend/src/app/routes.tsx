@@ -15,6 +15,7 @@ import GovernmentLogin from './components/pages/auth/GovernmentLogin';
 import LSKLogin from './components/pages/auth/LSKLogin';
 import eDMLogin from './components/pages/auth/eDMLogin';
 import LanguageSelection from './components/pages/settings/LanguageSelection';
+import NotFound from './components/pages/NotFound';
 
 
 export const router = createBrowserRouter([
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: 'auth/lsk', Component: LSKLogin },
       { path: 'auth/edm', Component: eDMLogin },
       { path: 'settings/language', Component: LanguageSelection },
+      {path: '*', Component: NotFound},
     ],
   },
 ]);
