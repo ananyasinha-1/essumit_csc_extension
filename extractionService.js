@@ -140,12 +140,25 @@ Example output format (do not copy these values):
 
   // ─── Step 3: Call Groq API ────────────────────────────────
 
+  async function getApiKey() {
+    if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+      return new Promise((resolve) => {
+        chrome.storage.local.get(["groqApiKey", "GROQ_API_KEY"], (items) => {
+          const key = items.groqApiKey || items.GROQ_API_KEY || GROQ_API_KEY;
+          resolve(key && String(key).trim() ? String(key).trim() : GROQ_API_KEY);
+        });
+      });
+    }
+    return GROQ_API_KEY;
+  }
+
   async function callGroq(prompt) {
+    const resolvedKey = await getApiKey();
     const response = await fetch(GROQ_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${GROQ_API_KEY}`
+        "Authorization": `Bearer ${resolvedKey}`
       },
       body: JSON.stringify({
         model:       GROQ_MODEL,
@@ -219,17 +232,21 @@ Example output format (do not copy these values):
       });
 
       if (values.length >= 2) {
-        const v1 = values[0].val.trim().toLowerCase();
-        const v2 = values[1].val.trim().toLowerCase();
-        if (v1 !== v2) {
-          mismatches.push({
-            field,
-            doc1:     values[0].doc,
-            val1:     values[0].val,
-            doc2:     values[1].doc,
-            val2:     values[1].val,
-            severity: "warning"
-          });
+        for (let i = 0; i < values.length; i++) {
+          for (let j = i + 1; j < values.length; j++) {
+            const v1 = values[i].val.trim().toLowerCase();
+            const v2 = values[j].val.trim().toLowerCase();
+            if (v1 !== v2) {
+              mismatches.push({
+                field,
+                doc1:     values[i].doc,
+                val1:     values[i].val,
+                doc2:     values[j].doc,
+                val2:     values[j].val,
+                severity: "warning"
+              });
+            }
+          }
         }
       }
     });
